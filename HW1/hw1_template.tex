@@ -1,0 +1,177 @@
+% =====================================================================
+% COSC 3337 — Homework 1 — ANSWER TEMPLATE for Part 0 and Part 1
+%
+% Typesetting Part 1 in LaTeX earns 5 bonus points.  Everything you need is
+% already defined below, so you never have to type \sigma_{...} yourself.
+%
+% To use this:  upload it to Overleaf (or run pdflatex locally), put your name
+% in the \student command, fill in the answers, and submit the PDF.
+% You do not submit this .tex file.
+%
+% ---------------------------------------------------------------------
+% THE FIVE MACROS YOU NEED
+%
+%   \Select{condition}{relation}        sigma_condition ( relation )
+%   \Project{attributes}{relation}      Pi_attributes ( relation )
+%   \Rename{newname}{relation}          rho_newname ( relation )
+%   \Group{groupby}{aggregate}{rel}     groupby gamma_aggregate ( rel )
+%   \GroupAll{aggregate}{relation}      gamma_aggregate ( relation )      (no grouping)
+%
+% Plus two for typesetting names:
+%
+%   \Rel{track}        a relation or attribute name
+%   \Val{Folk}         a string literal, in quotes
+%
+% And the plain symbols:  \Cross  \cup  \cap  -  \wedge  \vee  \neg
+%
+% EXAMPLE — "the titles of albums released in 2022 or later":
+%
+%   \[ \Project{\Rel{title}}{\Select{\Rel{release\_year} \geq 2022}{\Rel{album}}} \]
+%
+% Note that underscores in names must be written \_ , as in \Rel{release\_year}.
+% =====================================================================
+\documentclass[11pt]{article}
+
+\usepackage[margin=1in]{geometry}
+\usepackage{amsmath,amssymb}
+\usepackage{booktabs}
+\usepackage{enumitem}
+\usepackage{fancyhdr}
+
+\newcommand{\Select}[2]{\ensuremath{\sigma_{#1}\left(#2\right)}}
+\newcommand{\Project}[2]{\ensuremath{\Pi_{#1}\left(#2\right)}}
+\newcommand{\Rename}[2]{\ensuremath{\rho_{#1}\left(#2\right)}}
+\newcommand{\Group}[3]{\ensuremath{{}_{#1}\gamma_{#2}\left(#3\right)}}
+\newcommand{\GroupAll}[2]{\ensuremath{\gamma_{#1}\left(#2\right)}}
+\newcommand{\Cross}{\ensuremath{\times}}
+\newcommand{\Rel}[1]{\ensuremath{\mathtt{#1}}}
+\newcommand{\Val}[1]{\ensuremath{\text{``#1''}}}
+
+% Use this for the list of resulting tuples under each answer.
+\newenvironment{tuples}{\par\medskip\noindent\textit{Resulting tuples:}\begin{itemize}[nosep, leftmargin=1.6em]}{\end{itemize}\medskip}
+
+\newcommand{\student}{YOUR NAME HERE}
+
+\pagestyle{fancy}
+\fancyhf{}
+\lhead{\small COSC 3337 — HW 1 — \student}
+\rhead{\small Page \thepage}
+\renewcommand{\headrulewidth}{0.4pt}
+
+\setlength{\parindent}{0pt}
+\setlength{\parskip}{6pt}
+
+% =====================================================================
+\begin{document}
+
+\begin{center}
+  {\Large\bfseries COSC 3337 — Homework 1}\\[2pt]
+  {\large \student}
+\end{center}
+
+% =====================================================================
+\section*{Part 0 — VM setup}
+
+Paste the complete output of the verification command from Part 0.3 here.
+Do not include your password.
+
+\begin{verbatim}
+(paste output here)
+\end{verbatim}
+
+% =====================================================================
+\section*{Part 1 — Relational algebra}
+
+\subsection*{RA1}
+
+\[
+  % your expression here, for example:
+  \Project{\Rel{title}}{\Select{\Rel{duration\_sec} < 999}{\Rel{track}}}
+\]
+
+\begin{tuples}
+  \item ...
+\end{tuples}
+
+\subsection*{RA2}
+
+\[
+  % your expression here
+\]
+
+Your explanation here: how many tuples, how many rows in \Rel{artist}, and why
+they differ.
+
+\subsection*{RA3}
+
+\[
+  % your expression here
+\]
+
+\begin{tuples}
+  \item ...
+\end{tuples}
+
+\subsection*{RA4}
+
+\[
+  % your expression here.  You will need \Rename twice; a product of a relation
+  % with itself looks like:   \Rename{x}{\Rel{track}} \Cross \Rename{y}{\Rel{track}}
+\]
+
+\begin{tuples}
+  \item ...
+\end{tuples}
+
+\subsection*{RA5}
+
+\[
+  % your expression here
+\]
+
+\begin{tuples}
+  \item ...
+\end{tuples}
+
+\subsection*{RA6}
+
+\[
+  % your expression here.  Grouped aggregation looks like:
+  %   \Group{\Rel{album\_id}}{\text{sum}(\Rel{duration\_sec})}{\Rel{track}}
+\]
+
+\begin{tuples}
+  \item ...
+\end{tuples}
+
+\subsection*{RA7}
+
+\textbf{(a)} Number of tuples, and how you got it:
+
+\textbf{(b)} What is wrong with the expression:
+
+\textbf{(c)} A correct expression:
+\[
+  % your expression here
+\]
+
+\begin{tuples}
+  \item ...
+\end{tuples}
+
+\subsection*{RA8}
+
+\textbf{(a)} Equivalent? Justification:
+
+\textbf{(b)} Equivalent? Justification, and the general rule:
+
+\subsection*{RA9}
+
+\textbf{(a)} In one sentence, this expression computes:
+
+\textbf{(b)}
+\begin{tuples}
+  \item ...
+\end{tuples}
+
+\end{document}
