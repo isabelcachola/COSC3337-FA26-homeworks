@@ -9,11 +9,10 @@
 % You do not submit this .tex file.
 %
 % ---------------------------------------------------------------------
-% THE FIVE MACROS YOU NEED
+% THE FOUR MACROS YOU NEED
 %
 %   \Select{condition}{relation}        sigma_condition ( relation )
 %   \Project{attributes}{relation}      Pi_attributes ( relation )
-%   \Rename{newname}{relation}          rho_newname ( relation )
 %   \Group{groupby}{aggregate}{rel}     groupby gamma_aggregate ( rel )
 %   \GroupAll{aggregate}{relation}      gamma_aggregate ( relation )      (no grouping)
 %
@@ -70,16 +69,6 @@
 \end{center}
 
 % =====================================================================
-\section*{Part 0 — VM setup}
-
-Paste the complete output of the verification command from Part 0.3 here.
-Do not include your password.
-
-\begin{verbatim}
-(paste output here)
-\end{verbatim}
-
-% =====================================================================
 \section*{Part 1 — Relational algebra}
 
 \subsection*{RA1}
@@ -115,17 +104,6 @@ they differ.
 \subsection*{RA4}
 
 \[
-  % your expression here.  You will need \Rename twice; a product of a relation
-  % with itself looks like:   \Rename{x}{\Rel{track}} \Cross \Rename{y}{\Rel{track}}
-\]
-
-\begin{tuples}
-  \item ...
-\end{tuples}
-
-\subsection*{RA5}
-
-\[
   % your expression here
 \]
 
@@ -133,7 +111,7 @@ they differ.
   \item ...
 \end{tuples}
 
-\subsection*{RA6}
+\subsection*{RA5}
 
 \[
   % your expression here.  Grouped aggregation looks like:
@@ -144,7 +122,7 @@ they differ.
   \item ...
 \end{tuples}
 
-\subsection*{RA7}
+\subsection*{RA6}
 
 \textbf{(a)} Number of tuples, and how you got it:
 
@@ -159,19 +137,10 @@ they differ.
   \item ...
 \end{tuples}
 
-\subsection*{RA8}
+\subsection*{RA7}
 
 \textbf{(a)} Equivalent? Justification:
 
 \textbf{(b)} Equivalent? Justification, and the general rule:
-
-\subsection*{RA9}
-
-\textbf{(a)} In one sentence, this expression computes:
-
-\textbf{(b)}
-\begin{tuples}
-  \item ...
-\end{tuples}
 
 \end{document}
