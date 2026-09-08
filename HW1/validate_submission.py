@@ -26,7 +26,7 @@ import shutil
 import subprocess
 import sys
 
-EXPECTED = list(range(1, 13))
+EXPECTED = list(range(1, 9))
 
 # Which database each question is asked against.  Fixed by the handout, not by
 # anything in your file.
@@ -190,7 +190,7 @@ def main() -> None:
     ap.add_argument("path", nargs="?", default="hw1.sql")
     ap.add_argument("--check-runs", action="store_true",
                     help="also execute each query to confirm it runs")
-    ap.add_argument("--user", default="soundwave_ro")
+    ap.add_argument("--user", default="soundwave")
     ap.add_argument("--host", default="localhost")
     args = ap.parse_args()
 
@@ -242,7 +242,7 @@ def main() -> None:
             print(f"  - {p}")
         sys.exit(1)
 
-    print(f"{GREEN}Format is good: all 12 answers found and well formed.{RESET}")
+    print(f"{GREEN}Format is good: all 8 answers found and well formed.{RESET}")
     print("This script only checks the format, not the correctness of your submission.")
 
 
