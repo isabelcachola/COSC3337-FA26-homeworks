@@ -9,12 +9,13 @@ able to read your file at all; it says nothing about whether your answers are
 right.  Run it before you submit — a file the grader cannot parse loses points
 that have nothing to do with SQL.
 
-To also check that each query actually runs (this connects to MySQL and will
-ask for your soundwave_ro password once):
+To also check that each query actually runs:
 
     python3 validate_submission.py hw1.sql --check-runs
 
-No installation required: it uses the `mysql` command already on your VM.
+This connects exactly the way `mysql soundwave` does on your VM: MySQL
+recognises you from your login, so there is no password to type.  No
+installation required: it uses the `mysql` command already on your VM.
 """
 
 from __future__ import annotations
@@ -30,7 +31,7 @@ EXPECTED = list(range(1, 9))
 
 # Which database each question is asked against.  Fixed by the handout, not by
 # anything in your file.
-DB_FOR = {q: ("soundwave_small" if q >= 10 else "soundwave") for q in EXPECTED}
+DB_FOR = {q: ("soundwave_small" if q >= 6 else "soundwave") for q in EXPECTED}
 
 MARKER = re.compile(r"^\s*--\s*Q(\d+)\s*$")
 
@@ -165,17 +166,28 @@ def parse(path: str) -> tuple[dict[int, str], list[str]]:
     return result, problems
 
 
-def run_query(db: str, sql: str, user: str, password: str, host: str) -> str | None:
-    """Execute one statement.  Returns None on success, else the error text."""
-    cmd = [
-        "mysql", "--batch", "--raw", "--skip-column-names",
-        f"--user={user}", f"--host={host}", db,
-    ]
+def run_query(db: str, sql: str, user: str | None, password: str | None,
+              host: str) -> str | None:
+    """Execute one statement.  Returns None on success, else the error text.
+
+    With no --user, this lets the `mysql` client authenticate over the local
+    socket as whoever is logged in, which is how setup_db.sh provisions the
+    account (IDENTIFIED WITH auth_socket).  There is no password in that setup.
+    """
+    cmd = ["mysql", "--batch", "--raw", "--skip-column-names", f"--host={host}"]
+    if user:
+        cmd.append(f"--user={user}")
+    cmd.append(db)
+
+    env = {"PATH": "/usr/bin:/bin:/usr/local/bin"}
+    if password is not None:
+        env["MYSQL_PWD"] = password
+
     payload = "SET SESSION max_execution_time=5000;\n" + sql
     try:
         proc = subprocess.run(
             cmd, input=payload, capture_output=True, text=True, timeout=30,
-            env={"MYSQL_PWD": password, "PATH": "/usr/bin:/bin:/usr/local/bin"},
+            env=env,
         )
     except subprocess.TimeoutExpired:
         return ("query did not finish in 30 seconds — you have probably written "
@@ -190,7 +202,11 @@ def main() -> None:
     ap.add_argument("path", nargs="?", default="hw1.sql")
     ap.add_argument("--check-runs", action="store_true",
                     help="also execute each query to confirm it runs")
-    ap.add_argument("--user", default="soundwave")
+    ap.add_argument("--user", default=None,
+                    help="MySQL account to connect as (default: your login, "
+                         "recognised over the local socket)")
+    ap.add_argument("--password", action="store_true",
+                    help="prompt for a password; not needed on the course VM")
     ap.add_argument("--host", default="localhost")
     args = ap.parse_args()
 
@@ -222,7 +238,10 @@ def main() -> None:
         if not shutil.which("mysql"):
             print(f"\n{YELLOW}No `mysql` command found — skipping the run check.{RESET}")
         else:
-            password = getpass.getpass(f"\nMySQL password for {args.user}: ")
+            password = None
+            if args.password:
+                who = args.user or "your login"
+                password = getpass.getpass(f"\nMySQL password for {who}: ")
             print()
             for q in EXPECTED:
                 body = answers.get(q, "")
