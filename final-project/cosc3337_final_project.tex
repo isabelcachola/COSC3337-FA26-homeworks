@@ -1,0 +1,261 @@
+\documentclass[11pt]{article}
+\usepackage[margin=1in]{geometry}
+\IfFileExists{lmodern.sty}{\usepackage[T1]{fontenc}\usepackage{lmodern}}{}
+\usepackage{enumitem}
+\usepackage{tabularx}
+\usepackage{booktabs}
+\usepackage{multirow}
+\usepackage{xcolor}
+\usepackage{fancyhdr}
+\usepackage{titlesec}
+\usepackage{xurl}
+\usepackage[colorlinks=true,linkcolor=blue!50!black,urlcolor=blue!50!black]{hyperref}
+
+% ---------- Edit dates here ----------
+\newcommand{\cponedue}{Sunday, October 11, 11:59\,PM}
+\newcommand{\cptwodue}{Sunday, November 8, 11:59\,PM}
+\newcommand{\presdates}{Tuesday, December 8, 3:45--5:45\,PM, during the final exam slot}
+\newcommand{\presdatesshort}{Tuesday, December 8, 3:45--5:45\,PM}
+\newcommand{\finaldue}{Monday, December 7, 11:59\,PM}
+% -------------------------------------
+
+\pagestyle{fancy}
+\fancyhf{}
+\lhead{COSC 3337: Databases}
+\rhead{Final Project}
+\cfoot{\thepage}
+\setlength{\headheight}{14pt}
+\setlist{itemsep=2pt, topsep=4pt}
+\titlespacing*{\section}{0pt}{14pt}{6pt}
+\titlespacing*{\subsection}{0pt}{10pt}{4pt}
+
+\newcommand{\pts}[1]{\hfill\textbf{#1}}
+
+\begin{document}
+
+\begin{center}
+  {\LARGE\bfseries COSC 3337 Final Project}\\[4pt]
+  {\large Design and Build a Database Application}\\[4pt]
+  St.\ Edward's University \quad$\cdot$\quad Fall 2026
+\end{center}
+
+\section*{Overview}
+
+In teams of 3--4, you will design a relational database for a domain of your choosing and build a working application on top of it. By the end of the semester, a user who knows nothing about databases should be able to sit down at your application and complete its core tasks without ever knowing SQL exists.
+
+The project follows a standard database design methodology in three stages: you propose an idea, you design the database, and you build and present the finished application.
+
+\begin{center}
+\begin{tabularx}{0.92\textwidth}{@{}lXr@{}}
+\toprule
+\textbf{Deliverable} & \textbf{Due} & \textbf{Weight} \\
+\midrule
+Checkpoint 1: Team \& proposal & \cponedue & 10\% \\
+Checkpoint 2: Database design & \cptwodue & 25\% \\
+Final application \& report & \finaldue & \multirow{2}{*}{65\%} \\
+Presentation \& live demo & \presdatesshort & \\
+\bottomrule
+\end{tabularx}
+\end{center}
+
+\noindent All deliverables are submitted as PDFs on Canvas as a group. Peer evaluations are due with the final submission. 
+For your convenience, you are provided with LaTeX templates for each checkpoint and the final report, but you are not required to use them, as long as you submit a professional document.
+There is no bonus associated with using LaTex for the final report.
+
+\section{Teams}
+
+\begin{itemize}
+  \item Teams have 3 or 4 members. Submit your roster as part of Checkpoint~1 (\cponedue). Students without a team by then will be assigned to one.
+  \item Everyone on a team receives the same grade by default. Each member submits a confidential peer evaluation at the final checkpoint. If evaluations show that someone did substantially less than their share, that person's grade may be adjusted. I will also check the Git repository to see who committed code.
+  \item Good teamwork is not just dividing the work. Every member should be able to explain the schema and answer questions about any part of the application during the presentation.
+\end{itemize}
+
+\section{Choosing a Domain}
+
+You choose what your application does. Pick something you would actually want to use or can imagine someone using: a course registration system with waitlists, a marketplace for used textbooks, an appointment booker for a salon, a rec-league stats tracker, a shelter adoption system, and so on.
+I encourage you to use this project as an opportunity to build your developer portfolio. A well-designed, working application in a real domain is a strong addition to your resume.
+
+A good domain has:
+\begin{itemize}
+  \item Several kinds of things (entities) that relate to each other in interesting ways, including at least one many-to-many relationship.
+  \item Actions that change data, not just browsing. Something has to be created, updated, reserved, purchased, or cancelled.
+  \item Enough data to make queries meaningful: real public data, scraped data, or realistic generated data.
+\end{itemize}
+
+\noindent Avoid domains that are just a single list with a search box, or so large that your schema will not fit in two dozen tables. 
+
+\section{Suggested Data Sources and Tools}\label{sec:tools}
+
+\subsection*{Your tech stack}
+
+Every student has a course VM with MySQL already installed, and your team is welcome to build on it, but you do not have to. You may use a different relational database or hosting setup if you want to try something new, as long as:
+\begin{itemize}
+  \item it is a \textbf{relational} database queried with SQL, and it supports every SQL feature the project requires (outer joins, \texttt{GROUP BY}/\texttt{HAVING}, subqueries, set operations, and views);
+  \item your queries are written in SQL by your team, not generated by an ORM. You may use an ORM or query builder for simple inserts and lookups, but the 8 required queries and your view must be hand-written SQL;
+  \item you tell me which stack you chose in your Checkpoint~1 proposal;
+  \item I can run your application or see it demonstrated at the final checkpoint.
+\end{itemize}
+
+\noindent \textbf{Note:} If you use the course VM, the VM will be deleted at the end of the semester. You are responsible for backing up your work and moving it to a permanent location if you want to keep it.
+
+\subsection*{Where to find data}
+\begin{itemize}
+  \item \textbf{City of Austin Open Data Portal} (\url{https://data.austintexas.gov}): restaurant inspections, permits, parks, 311 requests, and more.
+  \item \textbf{Data.gov} (\url{https://data.gov}): U.S. federal datasets on nearly every topic.
+  \item \textbf{Kaggle Datasets} (\url{https://www.kaggle.com/datasets}): thousands of community-posted CSVs; check each dataset's license.
+  \item \textbf{IMDb Non-Commercial Datasets} (\url{https://developer.imdb.com/non-commercial-datasets/}): movies, people, and ratings.
+  \item \textbf{Open Library} (\url{https://openlibrary.org/developers}): books, authors, and editions through downloads or an API.
+  \item \textbf{MusicBrainz} (\url{https://musicbrainz.org/doc/MusicBrainz_Database}): artists, releases, and recordings.
+  \item \textbf{Transit GTFS feeds}, such as CapMetro's, published through the Austin portal and \url{https://mobilitydatabase.org}: routes, stops, and schedules.
+\end{itemize}
+
+\noindent\textbf{Generating realistic data.} If you public dataset is available, you may generate the data you need. \textbf{Mockaroo} (\url{https://www.mockaroo.com}) produces CSV or SQL inserts from a column spec, and the Python library \textbf{Faker} (\url{https://faker.readthedocs.io}) generates names, addresses, dates, and more in your own load script. You may also combine a real dataset with generated users or transactions.
+
+\subsection*{Tools}
+\begin{itemize}
+  \item \textbf{ER diagrams:} draw.io (\url{https://app.diagrams.net}) or any tool that supports the notation from class. \textbf{dbdiagram.io} (\url{https://dbdiagram.io}) is handy for drawing the relational schema.
+  \item \textbf{Database clients:} MySQL Workbench (\url{https://dev.mysql.com/downloads/workbench/}) or DBeaver (\url{https://dbeaver.io}) for browsing tables and testing queries.
+  \item \textbf{Other relational databases:} PostgreSQL (\url{https://www.postgresql.org}) or SQLite (\url{https://www.sqlite.org}). Hosted options such as Supabase (\url{https://supabase.com}) run PostgreSQL for you.
+  \item \textbf{Web frameworks:} Flask or Django (Python), Express (Node.js), plain PHP, or Spring Boot (Java). Each has a driver that supports parameterized queries.
+  \item \textbf{Deployment (extra credit):} services such as Render, Railway, or PythonAnywhere can host a small web app and database. Free tiers change often, so check current limits before you commit to one.
+\end{itemize}
+
+\section{Checkpoint 1: Team and Proposal \hfill {\normalsize Due \cponedue}}
+
+Submit a PDF containing:
+\begin{enumerate}
+  \item \textbf{Team roster.} The names of all team members.
+  \item \textbf{Domain and users.} What the application does, who uses it, and what problem it solves. If the application has more than one kind of user (e.g., buyers and sellers, students and administrators), describe each.
+  \item \textbf{Ten questions.} Ten questions your database must be able to answer, written in plain English from the user's point of view. Example: \emph{``Which items has this seller listed that have received no bids in the past week?''} 
+                                At least four should require combining information from more than one kind of entity, and at least two should involve counts, totals, or averages. These questions will become the queries in your final application.
+  \item \textbf{Data source.} Where your data will come from and roughly how many records you expect.
+  \item \textbf{Entities.} A rough list of the main entities and how they relate. This does not need to be a formal ER diagram yet.
+  \item \textbf{Tech stack.} The database and framework you plan to use, and whether you will run on a course VM.
+  \item \textbf{Git repository.} A link to your team's Git repository. You may choose to make it private or public, but I must be invited as a collaborator so I can view your work. (Username: \texttt{isabelcachola}). If you choose to make it public, be extra careful not to commit any real passwords, keys, or other sensitive information.
+\end{enumerate}
+
+\noindent\textbf{Proposal meeting.} Within two weeks of the Checkpoint~1 deadline, your team must meet with me to discuss the proposal. Sign up for a time slot once you submit.
+If you do not meet with me, your Checkpoint~1 grade will be a zero.
+
+\subsection*{Grading (10 points)}
+\begin{tabularx}{\textwidth}{@{}Xr@{}}
+Team roster & 1 \\
+Clear domain, users, and problem statement & 2 \\
+Ten questions: specific, answerable, meet the join and aggregation requirements & 4 \\
+Realistic data source & 1 \\
+Entity list shows enough complexity for the project & 1 \\
+Git repository & 1 \\
+Meeting with instructor & 0 (pass/fail) \\
+\end{tabularx}
+
+\section{Checkpoint 2: Database Design \hfill {\normalsize Due \cptwodue}}
+
+Submit a PDF containing:
+\begin{enumerate}
+  \item \textbf{ER diagram.} A complete ER diagram using the notation from class. It must include:
+    \begin{itemize}
+      \item at least 6 entity sets;
+      \item at least one many-to-many relationship set;
+      \item at least one weak entity set;
+      \item cardinality and participation constraints on every relationship.
+    \end{itemize}
+  \item \textbf{Relational schema.} The schema produced from your ER diagram, with every primary key and foreign key marked. For the weak entity and the many-to-many relationship, briefly explain how you translated each into tables.
+  \item \textbf{Updated questions.} Your ten questions, revised if your design changed them.
+\end{enumerate}
+
+\noindent You will receive feedback on your design. You may change the design afterward; document the changes in your final report.
+
+\subsection*{Grading (25 points)}
+\begin{tabularx}{\textwidth}{@{}Xr@{}}
+ER diagram meets all structural requirements and uses correct notation & 10 \\
+ER diagram accurately models the proposed domain & 5 \\
+Correct translation to relational schema, keys marked, translations explained & 8 \\
+Updated questions & 2 \\
+\end{tabularx}
+
+\section{Final Application}
+
+\subsection{Database implementation}
+
+Your database may run on a course VM or on any other relational DBMS your team chooses (see Section~\ref{sec:tools}). If you use a database server, create a separate user for each teammate and grant each the privileges they need. The database must include:
+
+\begin{itemize}
+  \item \textbf{Data:} at least a few hundred rows in total across your tables, loaded by a script included in your repository.
+  \item \textbf{At least 8 non-trivial queries} answering your proposal questions. Across them, you must use at least one of each:
+    \begin{itemize}
+      \item an outer join;
+      \item \texttt{GROUP BY} with \texttt{HAVING};
+      \item a subquery (nested in \texttt{WHERE}, \texttt{FROM}, or \texttt{SELECT});
+      \item a set operation (\texttt{UNION}, \texttt{INTERSECT}, or \texttt{EXCEPT}).
+    \end{itemize}
+  \item \textbf{At least one view}, used by the application.
+\end{itemize}
+
+\subsection{Application requirements}
+
+Your application must look and behave like a real product. \textbf{Users interact only through forms, buttons, dropdowns, search boxes, and clickable results. They never type SQL, see table or column names, or read raw database errors.} The less your application looks like it is talking to a relational database, the better.
+
+\begin{itemize}
+  \item \textbf{No query box.} A text area that runs arbitrary SQL, or a page of buttons labeled ``Query 1'' through ``Query 8,'' does not satisfy this requirement.
+  \item \textbf{Queries sit behind user actions.} Each of your required queries is triggered by something a user would naturally do, such as ``Show my overdue items'' or filtering listings by price range.
+  \item \textbf{Users can change data.} The application supports creating, updating, and deleting records through the interface. 
+  \item \textbf{Parameterized queries only.} All user input is passed as query parameters, never concatenated into SQL strings.
+  \item \textbf{Friendly errors.} Constraint violations (a duplicate username, a double-booked time slot) produce a plain-language message, not a raw database error.
+  \item \textbf{Readable output.} Results are formatted for your domain, with meaningful labels and links to detail pages rather than raw result grids.
+\end{itemize}
+
+\noindent Any language and framework is fine (Flask, Django, Node/Express, PHP, Java).
+
+\subsection{Final report}
+
+Submit a PDF report containing:
+\begin{enumerate}
+  \item \textbf{Overview:} what the application does and who it is for.
+  \item \textbf{Final ER diagram and relational schema}, with a list of changes since Checkpoint~2 and why you made them.
+  \item \textbf{Query map:} a table listing each required query, the plain-English question it answers, the screen and user action that runs it, and which required SQL feature(s) it demonstrates. Include the SQL in an appendix.
+  \item \textbf{Views:} what each view does and where the application uses it.
+  \item \textbf{Screenshots} of the main screens.
+  \item \textbf{Contributions:} what each team member did.
+  \item \textbf{Repository link and setup instructions} sufficient for someone to run your application.
+\end{enumerate}
+
+\noindent\textbf{Extra credit (5 points).} Include a link to your application deployed on the web, where anyone can use it.
+
+\subsection{Presentation}
+
+Each team gives a 15-minute presentation (\presdates) followed by questions. Include:
+\begin{itemize}
+  \item an overview of the domain and your ER diagram (about 5 minutes);
+  \item a live demo of the application, showing several queries and a friendly error message (about 9 minutes);
+  \item one thing you would change if you started over (about 1 minute).
+\end{itemize}
+Every team member must speak. Have screenshots ready in case your demo is unreachable.
+
+\subsection*{Final grading (65 points)}
+\begin{tabularx}{\textwidth}{@{}Xr@{}}
+\multicolumn{2}{@{}l}{\textbf{Database implementation (18)}} \\
+\quad Database set up and data loaded by script & 4 \\
+\quad Eight queries, correct, covering all required SQL features & 10 \\
+\quad View used meaningfully by the application & 4 \\
+\multicolumn{2}{@{}l}{\textbf{Application (27)}} \\
+\quad Users never write or see SQL; queries sit behind natural actions & 10 \\
+\quad Create, update, and delete work through the interface & 6 \\
+\quad Parameterized queries throughout & 5 \\
+\quad Friendly errors and readable output & 6 \\
+\multicolumn{2}{@{}l}{\textbf{Report (10)}} \\
+\quad Complete, accurate, query map correct, design changes explained & 10 \\
+\multicolumn{2}{@{}l}{\textbf{Presentation (10)}} \\
+\quad Clear explanation, working live demo, every member speaks and answers questions & 10 \\
+\multicolumn{2}{@{}l}{\textbf{Extra credit (up to 5)}} \\
+\quad Application deployed and publicly reachable on the web & +5 \\
+\end{tabularx}
+
+\vspace{6pt}
+\noindent\textbf{The standard to aim for:} a user unfamiliar with databases could complete your application's core tasks without knowing SQL exists.
+
+\section*{Academic Integrity}
+
+You may use libraries, frameworks, and public datasets, and you must cite them in your report. You may consult tutorials and documentation. The design, schema, queries, and application must be your team's own work. 
+If you use AI tools, follow the course AI policy and disclose how you used them in your report. Every team member must be able to explain any part of the submission.
+
+\end{document}

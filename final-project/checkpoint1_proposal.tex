@@ -1,0 +1,95 @@
+% COSC 3337 Final Project -- Checkpoint 1: Team Roster and Proposal
+% Due Sunday, October 11, 11:59 PM. Submit the compiled PDF on Canvas.
+% Length: 1--2 pages. Replace every [bracketed placeholder] and delete these comments' instructions as you go.
+
+\documentclass[11pt]{article}
+\usepackage[margin=1in]{geometry}
+\usepackage{enumitem}
+\usepackage{tabularx}
+\usepackage{booktabs}
+\usepackage{amssymb}
+\usepackage{xcolor}
+\usepackage[colorlinks=true,urlcolor=blue!50!black]{hyperref}
+\setlist{itemsep=2pt, topsep=4pt}
+
+% ---------- Fill these in ----------
+\newcommand{\appname}{[Application Name]}
+% -----------------------------------
+
+\begin{document}
+
+\begin{center}
+  {\Large\bfseries COSC 3337 Checkpoint 1: Proposal}\\[4pt]
+  {\large \appname{}}
+\end{center}
+
+\section*{1. Team Roster}
+% List all 3--4 members.
+\begin{enumerate}
+  \item {[Full name]} --- [St.\ Edward's email]
+  \item {[Full name]} --- [St.\ Edward's email]
+  \item {[Full name]} --- [St.\ Edward's email]
+  \item {[Full name]} --- [St.\ Edward's email]
+\end{enumerate}
+
+\section*{2. Domain and Users}
+% What does the application do, who uses it, and what problem does it solve?
+[One paragraph describing the application and the problem it solves.]
+
+\medskip
+\noindent\textbf{Users.} Describe each kind of user and what they do in the application.
+\begin{itemize}
+  \item \textbf{[User type, e.g., Buyer]:} [what they do]
+  \item \textbf{[User type, e.g., Seller]:} [what they do]
+\end{itemize}
+
+\section*{3. Ten Questions}
+% Plain English, from the user's point of view.
+% At least 4 must combine information from more than one kind of entity (mark "Multi").
+% At least 2 must involve counts, totals, or averages (mark "Agg").
+\noindent\begin{tabularx}{\textwidth}{@{}rXcc@{}}
+\toprule
+\# & Question & Multi & Agg \\
+\midrule
+1  & [e.g., Which items has this seller listed that have received no bids in the past week?] & \checkmark & \\
+2  & [Question] & & \\
+3  & [Question] & & \\
+4  & [Question] & & \\
+5  & [Question] & & \\
+6  & [Question] & & \\
+7  & [Question] & & \\
+8  & [Question] & & \\
+9  & [Question] & & \\
+10 & [Question] & & \\
+\bottomrule
+\end{tabularx}
+
+\section*{4. Data Source}
+\begin{itemize}
+  \item \textbf{Source(s):} [Dataset name and URL, or ``generated with Faker/Mockaroo''; mixing is fine]
+  \item \textbf{License / terms:} [License, or ``N/A -- generated'']
+  \item \textbf{Expected size:} [Roughly how many records in total, and in the largest tables]
+\end{itemize}
+
+\section*{5. Entity Sketch}
+% Not a formal ER diagram yet. List the main entities and how they relate.
+\begin{itemize}
+  \item \textbf{[Entity]:} [key attributes]
+  \item \textbf{[Entity]:} [key attributes]
+  \item \textbf{[Entity]:} [key attributes]
+\end{itemize}
+\textbf{Relationships:}
+\begin{itemize}
+  \item {[e.g., A seller lists many items; each item has one seller.]}
+  \item {[e.g., A student enrolls in many sections; a section has many students (many-to-many).]}
+\end{itemize}
+
+\section*{6. Tech Stack}
+\begin{itemize}
+  \item \textbf{Database:} [e.g., MySQL on a course VM, PostgreSQL on Supabase, SQLite]
+  \item \textbf{Application framework:} [e.g., Flask, Express, PHP]
+  \item \textbf{Where it will run:} [Course VM / other hosting]
+  \item \textbf{Git repository:} \url{[https://github.com/...]}
+\end{itemize}
+
+\end{document}

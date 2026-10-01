@@ -1,0 +1,180 @@
+% COSC 3337 Final Project -- Final Report
+% Due Monday, December 7, 11:59 PM. Submit the compiled PDF on Canvas.
+% Length: roughly 6--10 pages, excluding appendices.
+% Replace every [bracketed placeholder]. Put images in the same folder as this file.
+
+\documentclass[11pt]{article}
+\usepackage[margin=1in]{geometry}
+\usepackage{graphicx}
+\usepackage{enumitem}
+\usepackage{tabularx}
+\usepackage{booktabs}
+\usepackage{xcolor}
+\usepackage{listings}
+\usepackage[colorlinks=true,linkcolor=blue!50!black,urlcolor=blue!50!black]{hyperref}
+\setlist{itemsep=2pt, topsep=4pt}
+
+\lstset{
+  language=SQL,
+  basicstyle=\ttfamily\small,
+  keywordstyle=\bfseries\color{blue!50!black},
+  commentstyle=\itshape\color{gray},
+  breaklines=true,
+  frame=single,
+  framesep=4pt,
+  columns=fullflexible,
+  morekeywords={VIEW, REPLACE, HAVING, EXCEPT, INTERSECT, LEFT, RIGHT, OUTER}
+}
+
+% ---------- Fill these in ----------
+\newcommand{\appname}{[Application Name]}
+\newcommand{\members}{[Member 1, Member 2, Member 3, Member 4]}
+\newcommand{\repourl}{https://github.com/[user]/[repo]}
+% -----------------------------------
+
+\newcommand{\pk}[1]{\underline{#1}}
+\newcommand{\fk}[1]{\textit{#1}$^{\mathrm{FK}}$}
+\newcommand{\placeholderfig}[1]{\fbox{\parbox[c][2.4in][c]{0.9\textwidth}{\centering [#1]}}}
+
+\begin{document}
+
+\begin{center}
+  {\LARGE\bfseries \appname}\\[4pt]
+  {\large COSC 3337 Final Project Report}\\[2pt]
+  \members\\[2pt]
+  Repository: \url{\repourl}
+\end{center}
+
+\section{Overview}
+% What the application does, who it is for, and the problem it solves.
+[Two or three paragraphs.]
+
+\section{Database Design}
+
+\subsection{Final ER diagram}
+\begin{center}
+  % \includegraphics[width=\textwidth]{er_diagram_final.png}
+  \placeholderfig{Insert final ER diagram}
+\end{center}
+
+\subsection{Final relational schema}
+\begin{itemize}
+  \item \textsc{[Table]}(\pk{[id]}, [attribute], \fk{[other\_id]})
+  \item \textsc{[Table]}(\pk{[id]}, [attribute], [attribute])
+\end{itemize}
+
+\subsection{Changes since Checkpoint 2}
+% What changed in the design, and why. Include changes made in response to feedback.
+% If nothing changed, say so.
+\begin{itemize}
+  \item \textbf{[Change]:} [Why you made it]
+\end{itemize}
+
+\section{Query Map}
+% One row per required query (at least 8). Across all queries you must use at
+% least one outer join, GROUP BY with HAVING, subquery, and set operation.
+% The full SQL for each query goes in Appendix A.
+\noindent\begin{tabularx}{\textwidth}{@{}rXXl@{}}
+\toprule
+\# & Question it answers & Screen and user action & SQL features \\
+\midrule
+Q1 & [Plain-English question] & [e.g., ``My Listings'' page, click ``Show unsold''] & [Outer join] \\
+Q2 & [Question] & [Screen / action] & [GROUP BY + HAVING] \\
+Q3 & [Question] & [Screen / action] & [Subquery] \\
+Q4 & [Question] & [Screen / action] & [Set operation] \\
+Q5 & [Question] & [Screen / action] & [ ] \\
+Q6 & [Question] & [Screen / action] & [ ] \\
+Q7 & [Question] & [Screen / action] & [ ] \\
+Q8 & [Question] & [Screen / action] & [ ] \\
+\bottomrule
+\end{tabularx}
+
+\section{View(s)}
+% For each view: what it computes and which part of the application uses it.
+\begin{itemize}
+  \item \textbf{\texttt{[view\_name]}:} [What it does]. Used by [screen / feature].
+\end{itemize}
+% The CREATE VIEW statement goes in Appendix B.
+
+\section{Screenshots}
+% Show the main screens a user moves through. Caption each one.
+\begin{figure}[h]
+  \centering
+  % \includegraphics[width=0.9\textwidth]{screen_home.png}
+  \placeholderfig{Screenshot: home page}
+  \caption{[What this screen shows and which queries it runs.]}
+\end{figure}
+
+\begin{figure}[h]
+  \centering
+  % \includegraphics[width=0.9\textwidth]{screen_search.png}
+  \placeholderfig{Screenshot: [screen name]}
+  \caption{[Caption]}
+\end{figure}
+
+\section{Team Contributions}
+\noindent\begin{tabularx}{\textwidth}{@{}lX@{}}
+\toprule
+Member & Contributions \\
+\midrule
+{[Name]} & [What they did] \\
+{[Name]} & [What they did] \\
+{[Name]} & [What they did] \\
+{[Name]} & [What they did] \\
+\bottomrule
+\end{tabularx}
+
+\section{Setup Instructions}
+% Enough detail for someone else to run your application from the repository.
+\begin{enumerate}
+  \item \textbf{Requirements:} [e.g., Python 3.12, MySQL 8]
+  \item \textbf{Create the database:} [command, e.g., \texttt{mysql -u root -p < schema.sql}]
+  \item \textbf{Load the data:} [command, e.g., \texttt{python load\_data.py}]
+  \item \textbf{Configure the connection:} [where credentials go, e.g., a \texttt{.env} file; never commit real passwords]
+  \item \textbf{Run the application:} [command and the URL to open]
+\end{enumerate}
+
+\section*{Extra Credit: Deployed Application (optional)}
+% Delete this section if you did not deploy.
+Live application: \url{[https://...]}\\
+Hosted on: [service]
+
+\section*{Sources and Tools}
+% Cite datasets, libraries, frameworks, and tutorials you used.
+% Disclose any AI tool use, following the course AI policy.
+\begin{itemize}
+  \item \textbf{Data:} [Dataset name, URL, license]
+  \item \textbf{Libraries and frameworks:} [Names and versions]
+  \item \textbf{AI tool use:} [Which tools, and what you used them for; or ``None'']
+\end{itemize}
+
+\clearpage
+\appendix
+
+\section{SQL for Required Queries}
+% Paste the exact SQL your application runs. Use ? or %s where the application
+% passes a parameter.
+
+\subsection*{Q1: [Short description]}
+\begin{lstlisting}
+-- Answers: [plain-English question]
+SELECT s.name, i.title
+FROM seller s
+LEFT JOIN item i ON i.seller_id = s.seller_id
+WHERE s.seller_id = ?;
+\end{lstlisting}
+
+\subsection*{Q2: [Short description]}
+\begin{lstlisting}
+-- [SQL]
+\end{lstlisting}
+
+% Repeat for Q3--Q8.
+
+\section{View Definitions}
+\begin{lstlisting}
+CREATE VIEW [view_name] AS
+SELECT ...;
+\end{lstlisting}
+
+\end{document}

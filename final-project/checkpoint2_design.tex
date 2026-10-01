@@ -1,0 +1,92 @@
+% COSC 3337 Final Project -- Checkpoint 2: Database Design
+% Due Sunday, November 8, 11:59 PM. Submit the compiled PDF on Canvas.
+% Replace every [bracketed placeholder]. Put your ER diagram image in the same
+% folder as this file and change the filename in Section 1.
+
+\documentclass[11pt]{article}
+\usepackage[margin=1in]{geometry}
+\usepackage{graphicx}
+\usepackage{enumitem}
+\usepackage{tabularx}
+\usepackage{booktabs}
+\usepackage{amssymb}
+\usepackage{xcolor}
+\usepackage[colorlinks=true,urlcolor=blue!50!black]{hyperref}
+\setlist{itemsep=2pt, topsep=4pt}
+
+% ---------- Fill these in ----------
+\newcommand{\appname}{[Application Name]}
+\newcommand{\members}{[Member 1, Member 2, Member 3, Member 4]}
+% -----------------------------------
+
+% Primary keys are underlined; foreign keys are marked with \fk{...}.
+\newcommand{\pk}[1]{\underline{#1}}
+\newcommand{\fk}[1]{\textit{#1}$^{\mathrm{FK}}$}
+
+\begin{document}
+
+\begin{center}
+  {\Large\bfseries COSC 3337 Checkpoint 2: Database Design}\\[4pt]
+  {\large \appname{}}\\[2pt]
+  \members
+\end{center}
+
+\section{ER Diagram}
+% Use the ER notation from class. Include cardinality and participation
+% constraints on every relationship.
+% Replace the placeholder box with:
+%   \includegraphics[width=\textwidth]{er_diagram.png}
+\begin{center}
+  \fbox{\parbox[c][3in][c]{0.9\textwidth}{\centering [Insert ER diagram image here]}}
+\end{center}
+
+\subsection*{Requirements check}
+% Name the part of your diagram that satisfies each requirement.
+\noindent\begin{tabularx}{\textwidth}{@{}lX@{}}
+\toprule
+Requirement & Where it appears in the diagram \\
+\midrule
+At least 6 entity sets & [List them] \\
+At least one many-to-many relationship set & [Relationship name and the entities it connects] \\
+At least one weak entity set & [Weak entity, its identifying relationship, and owner entity] \\
+Cardinality \& participation on every relationship & [Yes / notes] \\
+\bottomrule
+\end{tabularx}
+
+\section{Relational Schema}
+% One line per table. Underline primary keys with \pk{} and mark foreign keys with \fk{}.
+% Say what each foreign key references.
+\begin{itemize}
+  \item \textsc{[Table]}(\pk{[id]}, [attribute], [attribute], \fk{[other\_id]})
+    \\ \quad \fk{[other\_id]} references \textsc{[OtherTable]}
+  \item \textsc{[Table]}(\pk{[id]}, [attribute], [attribute])
+  \item \textsc{[Table]}(\pk{[id]}, [attribute], [attribute])
+\end{itemize}
+
+\subsection*{How we translated the ER diagram}
+\begin{itemize}
+  \item \textbf{Weak entity:} [How the weak entity became a table, and what its primary key is]
+  \item \textbf{Many-to-many relationship:} [The table you created for it, its primary key, and its foreign keys]
+\end{itemize}
+
+\section{Updated Questions}
+% Your ten questions from Checkpoint 1. Revise them if the design changed, and
+% note what changed. If nothing changed, say so.
+\noindent\begin{tabularx}{\textwidth}{@{}rXl@{}}
+\toprule
+\# & Question & Changed? \\
+\midrule
+1  & [Question] & [No / how] \\
+2  & [Question] & \\
+3  & [Question] & \\
+4  & [Question] & \\
+5  & [Question] & \\
+6  & [Question] & \\
+7  & [Question] & \\
+8  & [Question] & \\
+9  & [Question] & \\
+10 & [Question] & \\
+\bottomrule
+\end{tabularx}
+
+\end{document}
