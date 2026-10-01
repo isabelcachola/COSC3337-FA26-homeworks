@@ -12,6 +12,12 @@ cd COSC3337-FA26-homeworks
 ```
 COSC3337-FA26-homeworks/
 ├── README.md               this file
+├── final-project/          final project — handout and templates
+│   ├── cosc3337_final_project.pdf   the project handout — read this first
+│   ├── checkpoint1_proposal.pdf     Checkpoint 1 (team and proposal) template
+│   ├── checkpoint2_design.pdf       Checkpoint 2 (database design) template
+│   └── final_report.pdf             final report template
+│                                    (each PDF has a matching .tex source)
 └── HW1/                    Homework 1 — relational algebra and SQL
     ├── hw1.pdf             the assignment handout — read this first
     ├── hw1_template.tex    LaTeX answer template for Part 1
