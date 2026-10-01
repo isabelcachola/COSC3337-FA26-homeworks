@@ -1,0 +1,74 @@
+\documentclass[11pt]{article}
+\usepackage[margin=1in]{geometry}
+\usepackage{graphicx}
+\usepackage{enumitem}
+\usepackage{amssymb}
+\usepackage{fancyhdr}
+\usepackage[hidelinks]{hyperref}
+
+% ---------------------------------------------------------------- fill in
+\newcommand{\studentname}{Your Name}
+\newcommand{\studentid}{Your Student ID}
+% ----------------------------------------------------------------
+
+% Schema notation for Question 1.2
+%   \pk{attr}        primary-key attribute (underlined)
+%   \fk{attr}{rel}   foreign key: attr -> rel
+\newcommand{\pk}[1]{\underline{#1}}
+\newcommand{\fk}[2]{#1 $\rightarrow$ #2}
+\newcommand{\relation}[2]{\texttt{#1}(#2)}
+
+% Includes an image if it exists; otherwise shows a placeholder box.
+\newcommand{\diagram}[2][\linewidth]{%
+  \IfFileExists{#2}{\includegraphics[width=#1]{#2}}%
+  {\fbox{\parbox[c][2in][c]{0.9\linewidth}{\centering Place your diagram in \texttt{\detokenize{#2}}}}}}
+
+\pagestyle{fancy}
+\fancyhf{}
+\lhead{COSC 3337 $\cdot$ Fall 2026}
+\rhead{HW2 $\cdot$ \studentname}
+\cfoot{\thepage}
+\setlength{\headheight}{14pt}
+\setlength{\parindent}{0pt}
+\setlength{\parskip}{6pt}
+
+\begin{document}
+
+\begin{center}
+  {\LARGE\bfseries Homework 2: ER Modeling}\\[4pt]
+  {\large COSC 3337 $\cdot$ Fall 2026}\\[6pt]
+  \studentname \quad$\cdot$\quad \studentid
+\end{center}
+
+% =====================================================================
+\section*{Part 1: Written}
+
+% ---------------------------------------------------------------------
+\subsection*{Question 1.1: Model from Requirements}
+
+\subsubsection*{(a) ER Diagram}
+
+\begin{center}
+  \diagram{er_diagram.png}
+\end{center}
+
+\subsubsection*{(b) Assumptions Log}
+
+\begin{enumerate}[label=A\arabic*.]
+  \item Assumption. \\
+        \textit{Justification:}
+  \item Assumption. \\
+        \textit{Justification:}
+\end{enumerate}
+
+% ---------------------------------------------------------------------
+\subsection*{Question 1.2: Reduce Your ER Diagram to a Relational Schema}
+
+\begin{enumerate}[label={}, leftmargin=0pt, itemsep=4pt]
+  \item \relation{relation\_name}{\pk{attribute\_1}, \fk{attribute\_2}{other\_relation}, attribute\_3} \\
+        \textit{Rule:}
+  \item \relation{relation\_name}{\pk{attribute\_1}, attribute\_2} \\
+        \textit{Rule:}
+\end{enumerate}
+
+\end{document}

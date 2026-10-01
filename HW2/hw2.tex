@@ -1,0 +1,511 @@
+\documentclass[11pt]{article}
+\usepackage[margin=1in]{geometry}
+\usepackage{microtype}
+\usepackage{enumitem}
+\usepackage{booktabs}
+\usepackage{tabularx}
+\usepackage{array}
+\usepackage{xcolor}
+\usepackage{listings}
+\usepackage{fancyhdr}
+\usepackage[most]{tcolorbox}
+\usepackage{tikz}
+\usetikzlibrary{shapes.multipart,shapes.geometric,arrows.meta,positioning}
+\usepackage{placeins}
+\usepackage[hidelinks]{hyperref}
+
+% ---------------------------------------------------------------- edit me
+\newcommand{\duedate}{Sunday, October 18, 2026, 11:59 PM}
+\newcommand{\hwnum}{2}
+% ----------------------------------------------------------------
+
+\pagestyle{fancy}
+\fancyhf{}
+\lhead{COSC 3337 $\cdot$ Fall 2026}
+\rhead{Homework \hwnum: ER Modeling}
+\cfoot{\thepage}
+\setlength{\headheight}{14pt}
+\setlength{\parindent}{0pt}
+\setlength{\parskip}{6pt}
+
+\definecolor{accent}{RGB}{31,78,121}
+\definecolor{warnbg}{RGB}{253,246,227}
+\definecolor{warnframe}{RGB}{204,153,0}
+
+\newtcolorbox{infobox}[1][]{colback=accent!5,colframe=accent,boxrule=0.6pt,arc=2pt,
+  left=6pt,right=6pt,top=4pt,bottom=4pt,fonttitle=\bfseries,#1}
+\newtcolorbox{warnbox}[1][]{colback=warnbg,colframe=warnframe,boxrule=0.6pt,arc=2pt,
+  left=6pt,right=6pt,top=4pt,bottom=4pt,fonttitle=\bfseries,coltitle=black,#1}
+\newtcolorbox{briefbox}{colback=gray!4,colframe=gray!50,boxrule=0.4pt,arc=2pt,
+  left=10pt,right=10pt,top=6pt,bottom=6pt,breakable}
+
+\lstset{basicstyle=\ttfamily\small,columns=fullflexible,keepspaces=true,upquote=true,
+  frame=single,rulecolor=\color{gray!50},backgroundcolor=\color{gray!4},
+  xleftmargin=4pt,xrightmargin=4pt,aboveskip=6pt,belowskip=6pt}
+
+\newcommand{\pts}[1]{\hfill\textbf{(#1 pts)}}
+\newcommand{\code}[1]{\texttt{#1}}
+\newcommand{\attrs}[1]{\begin{tabular}{@{}l@{}}#1\end{tabular}}
+
+\begin{document}
+
+\begin{center}
+  {\LARGE\bfseries Homework \hwnum: ER Modeling}\\[4pt]
+  {\large COSC 3337 $\cdot$ Fall 2026}\\[4pt]
+  \textbf{Due:} \duedate \quad$\cdot$\quad \textbf{Points:} 100 (+5 bonus)
+\end{center}
+
+\section*{Overview}
+
+In this homework you will design a database for a small business, starting from what its
+application needs to do. You will draw an ER diagram, reduce it to a relational
+schema, and then build that schema in MySQL and test whether it
+actually enforces the business's rules.
+
+By the end you should be able to:
+
+\begin{infobox}[title=Submission]
+Submit a single file, \code{hw\hwnum.zip}, containing \textbf{exactly two files at the top level}:
+\begin{itemize}[nosep]
+  \item \code{hw\hwnum.pdf}: all of Part~1.
+  \item \code{schema.sql}: your schema for Part~2.
+\end{itemize}
+Zip the two files themselves, not a folder containing them (\code{zip hw\hwnum.zip hw\hwnum.pdf schema.sql}).
+
+Handwritten submissions must be scanned properly; do not submit a photograph of your work.
+
+\textbf{LaTeX bonus (+5):} typeset \code{hw\hwnum.pdf} in LaTeX. Diagrams may be drawn by hand or with a tool such as draw.io and included as images.
+\end{infobox}
+
+\begin{warnbox}[title=Before you start]
+Read the \textbf{naming contract} in Part~2 (page~\pageref{sec:contract}) before you draw your
+diagram in Part~1. Your ER diagram and schema should use those names, because your Part~2 code
+is built from your Part~1 design.
+\end{warnbox}
+
+% =====================================================================
+\section*{Part 0: Set Up Python on Your VM \hfill (not graded)}
+
+The self-check script for Part~2 is written in Python and needs the package
+\code{mysql-connector-python}. In this part you install \textbf{Miniconda}, a small Python
+distribution, in your home directory on your VM, and create a Python environment for this course.
+Run every command below in an SSH session on your VM. It takes about five minutes.
+
+
+\subsection*{Step 1: Download and install Miniconda}
+\begin{lstlisting}
+mkdir -p ~/miniconda3
+wget https://repo.anaconda.com/miniconda/Miniconda3-latest-Linux-x86_64.sh \
+     -O ~/miniconda3/miniconda.sh
+bash ~/miniconda3/miniconda.sh -b -u -p ~/miniconda3
+rm ~/miniconda3/miniconda.sh
+\end{lstlisting}
+The \code{-b} flag installs without asking questions, and \code{-p} sets the install location.
+Nothing here needs \code{sudo}.
+
+\subsection*{Step 2: Turn on conda}
+\begin{lstlisting}
+source ~/miniconda3/bin/activate
+conda init bash
+\end{lstlisting}
+Now \textbf{log out and SSH back in}. Your prompt should start with \code{(base)}, which means conda
+is active.
+
+\subsection*{Step 3: Create an environment for this course}
+\begin{lstlisting}
+conda create -n cosc3337 python=3.12 -y
+conda activate cosc3337
+\end{lstlisting}
+Your prompt should now start with \code{(cosc3337)}.
+
+\subsection*{Step 4: Install the required package}
+\begin{lstlisting}
+pip install mysql-connector-python
+\end{lstlisting}
+
+\subsection*{Step 5: Check that everything works}
+\begin{lstlisting}
+which python
+python -c "import mysql.connector; print(mysql.connector.__version__)"
+mysql --version
+\end{lstlisting}
+\code{which python} should print a path inside \code{\textasciitilde/miniconda3/envs/cosc3337/}.
+The second command should print a version number with no errors. The script also uses the
+\code{mysql} command-line client, which is already installed on your VM along with MySQL.
+
+\textbf{Every time you log in} to work on this homework, run \code{conda activate cosc3337} first.
+
+\begin{warnbox}[title=Troubleshooting]
+\raggedright
+\begin{itemize}[nosep,leftmargin=*]
+  \item \textbf{\code{wget: command not found}}: run \code{sudo apt install wget}, then repeat Step~2.
+  \item \textbf{\code{conda: command not found} after logging back in}: run
+    \code{source \textasciitilde/miniconda3/bin/activate} and \code{conda init bash} again, then log out and back in.
+  \item \textbf{An error about Terms of Service during Step~3}: run the two commands below, then
+    repeat Step~3.
+\begin{lstlisting}
+conda tos accept --override-channels --channel https://repo.anaconda.com/pkgs/main
+conda tos accept --override-channels --channel https://repo.anaconda.com/pkgs/r
+\end{lstlisting}
+  \item \textbf{\code{ModuleNotFoundError: No module named 'mysql'}}: your course environment isn't
+    active. Run \code{conda activate cosc3337} and check that \code{which python} points into
+    \code{\textasciitilde/miniconda3/envs/cosc3337/}.
+  \item \textbf{Your VM was replaced}: a new VM doesn't have Miniconda, so repeat Part~0.
+\end{itemize}
+\end{warnbox}
+
+% =====================================================================
+\section*{The Scenario: Blue Heron Dive Co.}
+
+The owner of a (fictional) local dive shop is hiring a developer to build a booking app, and
+needs a database first. She described what the app has to do, screen by screen. You will use
+this brief in Part~1 and Part~2.
+
+\begin{briefbox}
+\textit{Hi! I'm Marisol, and I own Blue Heron Dive Co. We run boat dive trips on Lake Travis and
+at a few spring-fed sites in the Hill Country. Right now everything lives in one giant
+spreadsheet, and it's falling apart. Here's what the new app needs to do.}
+
+\medskip
+\textbf{Screen 1: Customer profile.}
+Shows the customer's name; their email (they log in with it, so no two customers can share one);
+their mailing address (street, city, state, ZIP); every phone number they've given us (some people
+give us one, some give us three); their certification level, which is one of
+\emph{Open Water}, \emph{Advanced}, or \emph{Rescue}; and their upcoming trips.
+
+\medskip
+\textbf{Screen 2: Trip page.}
+Shows the trip's date and price, the boat it goes out on, and the divemaster leading it. Every trip
+uses exactly one boat and is led by exactly one divemaster. The page lists every customer booked on
+the trip and how much each has paid so far: deposits are fine, but nobody can pay a negative amount.
+It also shows \emph{spots remaining}, which is the boat's capacity minus the number of bookings.
+A customer can't book the same trip twice.
+
+\medskip
+\textbf{Screen 3: Boats and staff.}
+Each boat has a name and a capacity, which is at least one seat. We never remove a boat that has
+trips on record, because we need that history for insurance. Each divemaster has a name and a PADI
+professional number, which is unique to that person.
+
+\medskip
+\textbf{Screen 4: Dive log.}
+Each trip has one or more dives, numbered 1, 2, 3, \ldots{} within that trip. ``Dive~2'' only means
+something together with its trip. For each dive we log the maximum depth in meters (never deeper
+than 40\,m, the recreational limit) and the bottom time in minutes. Each dive happens at a dive site,
+which has a name and an area. A trip usually stays at one site, but sometimes the boat moves between
+dives. If we cancel a trip, its dive log goes with it.
+
+\medskip
+\textbf{Screen 5: Gear desk.}
+We have rental gear items, each with a serial number, a type (BCD, regulator, wetsuit, fins, or dive
+computer), and a size where that applies. Staff record which customer rented which item for which
+trip, and the rental fee. An item can only go to one customer on a given trip.
+\end{briefbox}
+
+\begin{infobox}[title=Glossary for non-divers]
+\begin{description}[nosep,leftmargin=0pt,labelsep=0.5em]
+  \item[Trip:] one boat outing on a given date.
+  \item[Dive:] one descent underwater. A trip usually includes two or three dives.
+  \item[Divemaster:] a dive professional employed by the shop to lead trips.
+  \item[PADI professional number:] an ID number issued to each dive professional by a
+    certification agency (PADI).
+  \item[Certification level:] the level of training a diver has completed.
+  \item[Bottom time:] how long a dive lasts, in minutes.
+  \item[BCD, regulator, dive computer:] types of scuba equipment.
+\end{description}
+\end{infobox}
+
+% =====================================================================
+\section*{Part 1: Written \hfill (50 pts)}
+
+Use the ER notation from class.
+
+% ---------------------------------------------------------------------
+\subsection*{Question 1.1: Model from Requirements \pts{30}}
+
+Draw a complete ER diagram for Blue Heron Dive Co. that supports all five screens.
+
+\begin{enumerate}[label=(\alph*)]
+  \item \textbf{ER diagram.} Include every entity set, relationship set, and attribute the screens need,
+    with keys, cardinality constraints, and participation constraints. Use composite, multivalued,
+    and derived attributes where they fit.
+  \item \textbf{Assumptions log.} The brief is ambiguous or incomplete in at least three places.
+    List every assumption you made, each with a one-sentence justification that refers to the brief.
+    For example: \emph{``I assume a dive site belongs to a dive rather than a trip, because the boat
+    sometimes moves between dives (Screen~4).''} (You may use that one, but it doesn't count toward
+    your three.)
+\end{enumerate}
+
+\begin{center}
+\begin{tabular}{@{}lr@{}}
+\toprule
+\textbf{Rubric item} & \textbf{Points} \\
+\midrule
+Entity sets and attributes (including composite, multivalued, derived) & 7 \\
+Relationship sets, including any relationship of degree $>2$ & 6 \\
+Cardinality and participation constraints & 6 \\
+Keys, including the weak entity set and its discriminator & 5 \\
+Assumptions log: ambiguities found and resolved with justification & 6 \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+% ---------------------------------------------------------------------
+
+% ---------------------------------------------------------------------
+\FloatBarrier
+\subsection*{Question 1.2: Reduce Your ER Diagram to a Relational Schema \pts{20}}
+
+Reduce \textbf{your own} diagram from Question~1.1 to a relational schema using the rules in
+Silberschatz \S6.7.
+
+\begin{itemize}
+  \item Write one line per relation, with primary-key attributes underlined and each foreign key
+    marked with the relation it references. For example:\\[2pt]
+    \hspace*{1em}\code{trip(\underline{trip\_id}, boat\_id $\rightarrow$ boat, divemaster\_id $\rightarrow$ divemaster, trip\_date, price)}
+  \item Next to each relation, note in a few words which rule produced it (e.g., ``strong entity set,''
+    ``many-to-many relationship set,'' ``multivalued attribute'').
+  \item If you combined a relationship set into another relation instead of giving it its own
+    (e.g., a many-to-one relationship with total participation), say so.
+  \item Use the table and column names from the naming contract (page~\pageref{sec:contract}).
+\end{itemize}
+
+\begin{center}
+\begin{tabular}{@{}lr@{}}
+\toprule
+\textbf{Rubric item} & \textbf{Points} \\
+\midrule
+Correct set of relations for your diagram & 8 \\
+Primary keys & 4 \\
+Foreign keys & 4 \\
+Special cases: weak entity, multivalued/composite attributes, degree $>2$ & 4 \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+% =====================================================================
+\newpage
+\section*{Part 2: Coding \hfill (50 pts)}
+
+In this part you implement your Question~1.2 schema in MySQL on your VM and test whether it enforces
+Blue Heron's rules.
+
+\begin{warnbox}[title=How Part 2 is graded]
+\textbf{The autograder only checks functionality}: whether \code{schema.sql} loads, whether the
+required tables, keys, and constraints exist, and whether your schema accepts and rejects the test
+inserts listed below. All of its checks are listed in this handout, and you can run them yourself
+with the self-check script.
+
+\textbf{I will also read your \code{schema.sql} and grade it for design.} Passing every autograder
+check does not guarantee full credit. For example, a schema that passes the tests but doesn't match
+your Part~1 diagram, uses poor data types, or enforces a rule in a way that doesn't make sense will
+lose design points.
+\end{warnbox}
+
+% ---------------------------------------------------------------------
+\subsection*{The Naming Contract}
+\label{sec:contract}
+
+The autograder needs to know what your tables are called. Your schema must contain the following
+tables with \textbf{at least} these columns, using exactly these names:
+
+\begin{center}
+\renewcommand{\arraystretch}{1.15}
+\begin{tabularx}{\linewidth}{@{}l>{\raggedright\arraybackslash}X@{}}
+\toprule
+\textbf{Table} & \textbf{Required columns} \\
+\midrule
+\code{customer}   & \code{customer\_id}, \code{email}, \code{first\_name}, \code{last\_name}, \code{cert\_level} \\
+\code{divemaster} & \code{divemaster\_id}, \code{first\_name}, \code{last\_name}, \code{pro\_number} \\
+\code{boat}       & \code{boat\_id}, \code{name}, \code{capacity} \\
+\code{trip}       & \code{trip\_id}, \code{boat\_id}, \code{divemaster\_id}, \code{trip\_date}, \code{price} \\
+\code{dive}       & \code{trip\_id}, \code{dive\_no}, \code{max\_depth\_m}, \code{bottom\_time\_min} \\
+\code{booking}    & \code{customer\_id}, \code{trip\_id}, \code{amount\_paid} \\
+\bottomrule
+\end{tabularx}
+\end{center}
+
+The contract fixes \emph{names only}. It does not say which columns are keys, what data types to use,
+or what constraints to add. Those are your design decisions.
+
+\begin{itemize}
+  \item You may (and should) add other tables, such as those for phone numbers, dive sites, gear,
+    and rentals, and add other columns to the tables above.
+  \item \textbf{Any column you add to a contract table must allow \code{NULL} or have a \code{DEFAULT}.}
+    The tests insert rows using only the contract columns, so an extra \code{NOT NULL} column
+    without a default would make every insert fail.
+  \item IDs are inserted explicitly by the tests (e.g., \code{customer\_id = 1}), so don't rely on
+    \code{AUTO\_INCREMENT} values.
+\end{itemize}
+
+% ---------------------------------------------------------------------
+\newpage
+\subsection*{Rules for \code{schema.sql}}
+
+\begin{itemize}
+  \item It must begin with exactly these three lines:
+\begin{lstlisting}
+DROP DATABASE IF EXISTS hw2_dive;
+CREATE DATABASE hw2_dive;
+USE hw2_dive;
+\end{lstlisting}
+  \item It contains only DDL: \code{CREATE TABLE} statements (and \code{ALTER TABLE} if you need it).
+    \textbf{No \code{INSERT} statements}; the tests load their own data.
+  \item Comment your code: a short comment above each table saying which part of your ER diagram it
+    comes from is enough.
+\end{itemize}
+
+% ---------------------------------------------------------------------
+\subsection*{Question 2.1: DDL from Your Design \hfill\textbf{(15 pts, autograded)}}
+
+Write \code{schema.sql} implementing your Question~1.2 schema, with primary keys, foreign keys
+(including any \code{ON DELETE} behavior the brief calls for), \code{NOT NULL}, \code{UNIQUE}, and
+\code{CHECK} constraints wherever the brief's rules require them.
+
+The autograder loads your file into a fresh database and runs these checks:
+
+\begin{center}
+\renewcommand{\arraystretch}{1.15}
+\begin{tabularx}{\linewidth}{@{}l>{\raggedright\arraybackslash}Xr@{}}
+\toprule
+& \textbf{Check} & \textbf{Pts} \\
+\midrule
+S1 & \code{schema.sql} runs without errors. \emph{If this fails, nothing else can be checked and Part~2's autograded score is 0.} & 3 \\
+S2 & All contract tables and columns exist; every extra column in a contract table allows \code{NULL} or has a \code{DEFAULT} & 3 \\
+S3 & Every table has a primary key & 2 \\
+S4 & The primary key of \code{dive} is exactly (\code{trip\_id}, \code{dive\_no}) & 2 \\
+S5 & Foreign keys exist from \code{trip} $\rightarrow$ \code{boat}, \code{trip} $\rightarrow$ \code{divemaster}, \code{booking} $\rightarrow$ \code{customer}, \code{booking} $\rightarrow$ \code{trip}, and \code{dive} $\rightarrow$ \code{trip} & 3 \\
+S6 & At least 3 \code{CHECK} and at least 2 \code{UNIQUE} constraints in total & 1 \\
+S7 & Every table uses the InnoDB storage engine (the MySQL 8 default; foreign keys are not enforced otherwise) & 1 \\
+\bottomrule
+\end{tabularx}
+\end{center}
+
+% ---------------------------------------------------------------------
+\subsection*{Question 2.2: Constraint Test Suite \hfill\textbf{(20 pts, autograded)}}
+
+Each test below is a business rule from the brief turned into one SQL statement. Your schema should
+\textbf{accept} the valid statements and \textbf{reject} the invalid ones \textbf{with the right
+MySQL error}. A statement that fails for some other reason (a syntax error, an unknown column, a
+different constraint) does not pass.
+
+Before the tests run, the autograder loads this data into your schema:
+
+\noindent\begin{minipage}{\linewidth}
+\begin{lstlisting}
+customer:   (1, 'ana@example.com', 'Ana', 'Diaz', 'Advanced'),
+            (2, 'ben@example.com', 'Ben', 'Okafor', 'Open Water')
+divemaster: (1, 'Carla', 'Ruiz', 'PRO-1001')
+boat:       (1, 'Manta', 12)
+trip:       (1, boat 1, divemaster 1, '2026-11-14', 95.00)
+dive:       (trip 1, dive_no 1, max_depth_m 18, bottom_time_min 45)
+booking:    (customer 1, trip 1, amount_paid 95.00)
+\end{lstlisting}
+\end{minipage}
+
+Each test runs inside its own transaction and is rolled back afterwards, so tests don't affect each
+other. Each test is worth 1 point. The exact SQL for every test is in the self-check script.
+
+\begin{center}
+\small
+\renewcommand{\arraystretch}{1.12}
+\begin{tabularx}{\linewidth}{@{}l>{\raggedright\arraybackslash}Xl@{}}
+\toprule
+& \textbf{Test} & \textbf{Expected result} \\
+\midrule
+T01 & Add a new customer with certification level \emph{Rescue} & accepted \\
+T02 & Add a second trip on the same boat with the same divemaster & accepted \\
+T03 & Customer 2 books trip 1 with a partial deposit & accepted \\
+T04 & Add dive 2 to trip 1 & accepted \\
+T05 & Dive number 1 is used again, on a different trip & accepted \\
+T06 & Customer 1, who already booked trip 1, books a second trip & accepted \\
+T07 & Delete a trip that has dives but no bookings; its dives are deleted too & accepted; 0 dives remain \\
+\midrule
+T08 & Two customers with the same email & rejected: 1062 (duplicate) \\
+T09 & Certification level \emph{Expert} & rejected: 3819 (CHECK) or 1265 (ENUM) \\
+T10 & Boat with capacity 0 & rejected: 3819 (CHECK) \\
+T11 & Two divemasters with the same PADI pro number & rejected: 1062 (duplicate) \\
+T12 & Trip with no boat (\code{boat\_id} is \code{NULL}) & rejected: 1048 (NOT NULL) \\
+T13 & Trip on a boat that doesn't exist & rejected: 1452 (foreign key) \\
+T14 & Booking for a customer who doesn't exist & rejected: 1452 (foreign key) \\
+T15 & Booking for a trip that doesn't exist & rejected: 1452 (foreign key) \\
+T16 & The same customer books the same trip twice & rejected: 1062 (duplicate) \\
+T17 & Booking with a negative amount paid & rejected: 3819 (CHECK) or 1264 (out of range) \\
+T18 & Two dives with the same number on the same trip & rejected: 1062 (duplicate) \\
+T19 & A dive with a maximum depth of 45\,m & rejected: 3819 (CHECK) \\
+T20 & Delete boat 1, which has a trip on record & rejected: 1451 (foreign key) \\
+\bottomrule
+\end{tabularx}
+\end{center}
+
+% ---------------------------------------------------------------------
+\subsection*{Schema Design \hfill\textbf{(15 pts, graded by hand)}}
+
+I will read your \code{schema.sql} and grade it on:
+
+\begin{itemize}[nosep]
+  \item \textbf{Consistency with Part~1}: the tables and keys match your Question~1.2 schema and
+    your assumptions log. If you changed your design while coding, update Part~1 to match.
+  \item \textbf{Appropriate data types}: e.g., \code{DATE} for dates, \code{DECIMAL} rather than
+    \code{FLOAT} for money, sensible \code{VARCHAR} lengths.
+  \item \textbf{Constraints that express the rules}: every rule in the brief that \emph{can} be
+    enforced with a key, \code{NOT NULL}, \code{UNIQUE}, \code{CHECK}, or \code{ON DELETE} behavior is
+    enforced, including the tables the tests don't touch (phones, sites, gear, rentals).
+  \item \textbf{Readability}: named constraints (e.g., \code{CONSTRAINT ck\_boat\_capacity CHECK (...)}),
+    consistent formatting, and comments linking each table to your diagram.
+\end{itemize}
+
+% =====================================================================
+\section*{Testing on Your VM}
+
+The self-check script \code{hw2\_check.py}, posted with this assignment, runs \textbf{exactly the
+same checks as the autograder} and prints your autograded score. Run it before you submit.
+
+Complete Part~0 first. Then, from the folder that contains \code{schema.sql} and \code{hw2\_check.py}:
+
+\begin{lstlisting}
+conda activate cosc3337
+python hw2_check.py schema.sql
+\end{lstlisting}
+
+Run this as the same Linux user you use to open MySQL with the \code{mysql} command (on most course
+VMs, \code{root}); the script then logs in to MySQL the same way, with no password. If you log in to
+MySQL with a username and password instead, add them:
+
+\begin{lstlisting}
+python hw2_check.py schema.sql --user YOUR_MYSQL_USER --password YOUR_MYSQL_PASSWORD
+\end{lstlisting}
+
+If the script says it can't connect to MySQL, start the server with
+\code{sudo systemctl start mysql} and run it again.
+
+The script drops and recreates the database \code{hw2\_dive} every time it runs.
+
+\begin{warnbox}[title=Keep a copy off your VM]
+Your VM can't be restored if something goes wrong; the only fix is a fresh VM. Keep
+\code{schema.sql} (and everything else for this homework) on your own computer or in a Git
+repository, and copy it to the VM to test.
+\end{warnbox}
+
+% =====================================================================
+\section*{Grading Summary}
+
+\begin{center}
+\begin{tabular}{@{}llr@{}}
+\toprule
+\textbf{Part} & \textbf{Question} & \textbf{Points} \\
+\midrule
+1: Written & 1.1 Model from requirements & 30 \\
+           & 1.2 Reduce to a relational schema & 20 \\
+\midrule
+2: Coding  & 2.1 DDL structural checks (autograded) & 15 \\
+           & 2.2 Constraint test suite (autograded) & 20 \\
+           & Schema design (graded by hand) & 15 \\
+\midrule
+           & \textbf{Total} & \textbf{100} \\
+           & LaTeX bonus & +5 \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+\end{document}
