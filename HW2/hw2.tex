@@ -13,6 +13,9 @@
 \usetikzlibrary{shapes.multipart,shapes.geometric,arrows.meta,positioning}
 \usepackage{placeins}
 \usepackage[hidelinks]{hyperref}
+\usepackage[T1]{fontenc}
+
+
 
 % ---------------------------------------------------------------- edit me
 \newcommand{\duedate}{Sunday, October 18, 2026, 11:59 PM}
@@ -103,6 +106,8 @@ rm ~/miniconda3/miniconda.sh
 The \code{-b} flag installs without asking questions, and \code{-p} sets the install location.
 Nothing here needs \code{sudo}.
 
+
+
 \subsection*{Step 2: Turn on conda}
 \begin{lstlisting}
 source ~/miniconda3/bin/activate
@@ -151,10 +156,20 @@ conda tos accept --override-channels --channel https://repo.anaconda.com/pkgs/r
     active. Run \code{conda activate cosc3337} and check that \code{which python} points into
     \code{\textasciitilde/miniconda3/envs/cosc3337/}.
   \item \textbf{Your VM was replaced}: a new VM doesn't have Miniconda, so repeat Part~0.
+  \item \textbf{OOM errors installing miniconda}
+{\tiny\begin{lstlisting}
+fallocate -l 2G /swapfile    # create an empty 2 GB file
+chmod 600 /swapfile          # restrict access to root (required for swap files)
+mkswap /swapfile             # format the file as swap space
+swapon /swapfile             # turn the swap on
+free -h                      # verify: the Swap row should show ~2.0Gi
+echo '/swapfile none swap sw 0 0' >> /etc/fstab   # turn swap on after a reboot
+\end{lstlisting}}
 \end{itemize}
 \end{warnbox}
 
 % =====================================================================
+\newpage
 \section*{The Scenario: Blue Heron Dive Co.}
 
 The owner of a (fictional) local dive shop is hiring a developer to build a booking app, and
