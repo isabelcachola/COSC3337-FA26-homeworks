@@ -1,0 +1,4 @@
+Flask>=2.2
+PyMySQL>=1.1
+cryptography>=42      # lets PyMySQL do MySQL 8's default password auth
+Faker>=24             # used by 02_seed/seed.py only
