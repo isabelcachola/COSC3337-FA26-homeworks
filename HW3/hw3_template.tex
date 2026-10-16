@@ -1,0 +1,154 @@
+% =====================================================================
+% COSC 3337 — Homework 3 — ANSWER TEMPLATE for Part 1
+%
+% Typesetting Part 1 in LaTeX earns 5 bonus points.
+%
+% To use this:  upload it to Overleaf (or run pdflatex locally), put your name
+% in the \student command, fill in the answers, and submit the PDF.
+% You do not submit this .tex file.
+%
+% ---------------------------------------------------------------------
+% WRITING CODE AND SQL
+%
+% Put code (and anything else you want shown exactly, character for character)
+% in a code block:
+%
+%   \begin{lstlisting}
+%   SELECT name FROM artist WHERE country = 'Spain'
+%   \end{lstlisting}
+%
+% Inside a code block, everything is printed exactly as you type it: no
+% escaping needed.
+%
+% For a short piece of code inside a sentence, use \lstinline|...| :
+%
+%   The query \lstinline|SELECT * FROM artist| returns every artist.
+%
+% Outside code, underscores must be written \_ , as in artist\_id.
+% =====================================================================
+\documentclass[11pt]{article}
+
+\usepackage[margin=1in]{geometry}
+\usepackage{amsmath,amssymb}
+\usepackage{booktabs}
+\usepackage{enumitem}
+\usepackage{fancyhdr}
+\usepackage{textcomp}
+\usepackage{listings}
+
+\lstset{
+  basicstyle=\ttfamily\small,
+  columns=fullflexible,
+  keepspaces=true,
+  upquote=true,
+  showstringspaces=false,
+  breaklines=true,
+  frame=leftline,
+  xleftmargin=1.2em,
+}
+
+\newcommand{\student}{YOUR NAME HERE}
+
+\pagestyle{fancy}
+\fancyhf{}
+\lhead{\small COSC 3337 — HW 3 — \student}
+\rhead{\small Page \thepage}
+\renewcommand{\headrulewidth}{0.4pt}
+
+\setlength{\parindent}{0pt}
+\setlength{\parskip}{6pt}
+
+% =====================================================================
+\begin{document}
+
+\begin{center}
+  {\Large\bfseries COSC 3337 — Homework 3}\\[2pt]
+  {\large \student}
+\end{center}
+
+% =====================================================================
+\section*{1.1 Application architecture}
+
+\textbf{(a)}
+\begin{enumerate}
+  \item ...
+\end{enumerate}
+
+\begin{lstlisting}
+your SQL here
+\end{lstlisting}
+
+\textbf{(b)}
+
+\textbf{(c)}
+\begin{enumerate}
+  \item ...
+  \item ...
+\end{enumerate}
+
+% =====================================================================
+\section*{1.2 User input and SQL}
+
+\textbf{(a)}
+\begin{lstlisting}
+your SQL here
+\end{lstlisting}
+
+\textbf{(b)}
+\begin{lstlisting}
+your SQL here
+\end{lstlisting}
+Rows returned:
+
+\textbf{(c)} Input:
+\begin{lstlisting}
+your input here
+\end{lstlisting}
+SQL MySQL receives:
+\begin{lstlisting}
+your SQL here
+\end{lstlisting}
+
+\textbf{(d)}
+
+% =====================================================================
+\section*{1.3 Queries in a loop}
+
+\textbf{(a)}
+
+\textbf{(b)}
+\begin{lstlisting}
+SELECT ...
+\end{lstlisting}
+
+\textbf{(c)}
+
+% =====================================================================
+\section*{1.4 Scaling out: sharding}
+
+\textbf{(a)}
+\begin{enumerate}
+  \item ...
+  \item ...
+  \item ...
+\end{enumerate}
+
+\textbf{(b)}
+
+% =====================================================================
+\section*{1.5 MapReduce by hand}
+
+\textbf{(a)} Map output:
+
+\textbf{(b)} Shuffle output:
+
+\textbf{(c)} Reduce output:
+
+\textbf{(d)}
+\begin{lstlisting}
+SELECT ...
+\end{lstlisting}
+
+\textbf{(e)}
+
+\end{document}
