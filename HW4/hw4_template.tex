@@ -1,0 +1,158 @@
+% =====================================================================
+% COSC 3337 — Homework 4 — ANSWER TEMPLATE for Part 1
+%
+% Typesetting Part 1 in LaTeX earns 5 bonus points.
+%
+% To use this:  upload it to Overleaf (or run pdflatex locally), put your name
+% in the \student command, fill in the answers, and submit the PDF.
+% You do not submit this .tex file.
+%
+% ---------------------------------------------------------------------
+% WRITING CODE AND SQL
+%
+% Put code (and anything else you want shown exactly, character for character)
+% in a code block:
+%
+%   \begin{lstlisting}
+%   SELECT * FROM ticket_sale_wide LIMIT 5
+%   \end{lstlisting}
+%
+% Inside a code block, everything is printed exactly as you type it: no
+% escaping needed.
+%
+% For a short piece of code inside a sentence, use \lstinline|...| :
+%
+%   The query \lstinline|SELECT COUNT(*) FROM ticket_sale_wide| counts rows.
+%
+% Outside code, underscores must be written \_ , as in ticket\_sale\_wide.
+%
+% Math goes between dollar signs, e.g.
+%   $\{A, B\}^+ = \{A, B, C\}$     $\alpha \rightarrow \beta$     $X \oplus Y$
+%   $R_1 \cap R_2$     and \underline{A} to underline an attribute
+% =====================================================================
+\documentclass[11pt]{article}
+
+\usepackage[margin=1in]{geometry}
+\usepackage{amsmath,amssymb}
+\usepackage{booktabs}
+\usepackage{enumitem}
+\usepackage{fancyhdr}
+\usepackage{textcomp}
+\usepackage{listings}
+
+\lstset{
+  basicstyle=\ttfamily\small,
+  columns=fullflexible,
+  keepspaces=true,
+  upquote=true,
+  showstringspaces=false,
+  breaklines=true,
+  frame=leftline,
+  xleftmargin=1.2em,
+}
+
+\newcommand{\student}{YOUR NAME HERE}
+
+\pagestyle{fancy}
+\fancyhf{}
+\lhead{\small COSC 3337 — HW 4 — \student}
+\rhead{\small Page \thepage}
+\renewcommand{\headrulewidth}{0.4pt}
+
+\setlength{\parindent}{0pt}
+\setlength{\parskip}{6pt}
+
+% =====================================================================
+\begin{document}
+
+\begin{center}
+  {\Large\bfseries COSC 3337 — Homework 4}\\[2pt]
+  {\large \student}
+\end{center}
+
+
+% =====================================================================
+\section*{1.1 RAID}
+
+\textbf{(a)}
+
+\begin{tabular}{@{}lll@{}}
+\toprule
+Layout & Usable capacity & Failures always survived \\
+\midrule
+RAID 0 & ... & ... \\
+RAID 1 & ... & ... \\
+RAID 5 & ... & ... \\
+\bottomrule
+\end{tabular}
+
+\textbf{(b)}
+\begin{enumerate}
+  \item
+\begin{lstlisting}
+your work here
+\end{lstlisting}
+  \item
+\begin{lstlisting}
+your work here
+\end{lstlisting}
+\end{enumerate}
+
+\textbf{(c)}
+
+% =====================================================================
+\section*{1.2 Slotted pages}
+
+\begin{tabular}{@{}lccc@{}}
+\toprule
+Slot & (offset, size) now & After (a) & After (b) \\
+\midrule
+1 & (215, 25) & ... & ... \\
+2 & (175, 40) & ... & ... \\
+3 & (160, 15) & ... & ... \\
+4 & (130, 30) & ... & ... \\
+5 & ---       & ... & ... \\
+\midrule
+End of free space & 130 & ... & ... \\
+Free bytes        & 110 & ... & ... \\
+\bottomrule
+\end{tabular}
+
+Work for (a):
+
+Work for (b):
+
+% =====================================================================
+\section*{1.3 File organization}
+
+\textbf{(a)}
+
+\textbf{(b)}
+
+\textbf{(c)}
+
+% =====================================================================
+\section*{1.4 Functional dependencies in the export}
+
+\textbf{(a)}
+
+\textbf{(b)}
+
+\textbf{(c)}
+
+% =====================================================================
+\section*{1.5 BCNF decomposition}
+
+\textbf{(a)}
+
+\textbf{(b)}
+
+\begin{enumerate}
+  \item ...
+\end{enumerate}
+
+Final relations:
+
+\textbf{(c)}
+
+\end{document}
