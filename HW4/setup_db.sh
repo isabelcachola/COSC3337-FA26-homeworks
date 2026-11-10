@@ -86,10 +86,18 @@ SQL
   echo "      another user, first do:   export DB_USER=$GRANTEE"
 fi
 
-# Python packages.  root installs the Ubuntu packages; anyone else installs
-# them for their own account with pip, which needs no password.
+# Python packages, installed for whichever Python `python3` is right now.
+#   - Inside a conda or virtual environment (e.g. HW 2's `cosc3337`): pip
+#     installs into that environment.  (apt would install into Ubuntu's own
+#     Python instead, which this python3 never sees.)
+#   - Otherwise, root installs the Ubuntu packages, and anyone else installs
+#     them for their own account with pip, which needs no password.
+PY_ENV="$(python3 -c 'import sys; print(int(sys.prefix != sys.base_prefix))' 2>/dev/null || echo 0)"
 if python3 -c "import mysql.connector, pytest" 2>/dev/null; then
   echo "Python packages already installed."
+elif [[ -n "${CONDA_PREFIX:-}" || "$PY_ENV" -eq 1 ]]; then
+  echo "Installing the MySQL connector and pytest into $(python3 -c 'import sys; print(sys.prefix)') ..."
+  python3 -m pip install -q mysql-connector-python pytest
 elif [[ "$IS_ROOT" -eq 1 ]]; then
   echo "Installing the MySQL connector and pytest for Python ..."
   DEBIAN_FRONTEND=noninteractive apt-get update -qq
@@ -98,6 +106,12 @@ else
   echo "Installing the MySQL connector and pytest for your account ..."
   python3 -m pip install --user -q --break-system-packages mysql-connector-python pytest 2>/dev/null \
     || python3 -m pip install --user -q mysql-connector-python pytest
+fi
+if ! python3 -c "import mysql.connector, pytest" 2>/dev/null; then
+  echo "The MySQL connector or pytest is still missing for $(command -v python3)." >&2
+  echo "Install them with:   python3 -m pip install mysql-connector-python pytest" >&2
+  echo "then re-run this script." >&2
+  exit 1
 fi
 
 echo
